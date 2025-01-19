@@ -1,0 +1,237 @@
+local UserInputService = game:GetService("UserInputService")
+local StarterGui = game:GetService("StarterGui")
+local player = game:GetService("Players").LocalPlayer
+
+local originalBulletTypes = {}
+
+local function modifyToolSettings()
+    local backpack = player:FindFirstChild("Backpack")
+    local character = player.Character
+    local equippedTool = character and character:FindFirstChildOfClass("Tool")
+
+    local toolsToModify = {}
+
+    if backpack then
+        for _, tool in ipairs(backpack:GetChildren()) do
+            if tool:FindFirstChild("ACS_Module") then
+                table.insert(toolsToModify, tool)
+            end
+        end
+    end
+
+    if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
+        table.insert(toolsToModify, equippedTool)
+    end
+
+    for _, tool in ipairs(toolsToModify) do
+        local variables = tool.ACS_Module:FindFirstChild("Variables")
+
+        if variables then
+            local settingsModule = variables:FindFirstChild("Settings")
+            if settingsModule then
+                local settings = require(settingsModule)
+
+                if not originalBulletTypes[tool.Name] then
+                    originalBulletTypes[tool.Name] = settings.BulletType
+                end
+
+                settings.OldCamSway = true
+                settings.NewCameraMultiplier = 1
+                settings.OldRecoil = true
+                settings.ChangeFOV = {50, 70}
+                settings.ZoomAnim = false
+                settings.Bullets = 1
+                settings.FireRate = 1000
+                settings.BurstFireRate = 900
+                settings.BurstShot = 3
+                settings.GunType = 1
+                settings.ReloadType = 1
+                settings.Mode = "Semi"
+                settings.AutoChamber = false
+                settings.ChamberWhileAim = false
+                settings.VRecoil = {0.0000001, 0.0000001}
+                settings.HRecoil = {0.0000001, 0.0000001}
+                settings.AimRecover = 5
+                settings.RecoilPunch = 0
+                settings.VPunchBase = 0.0000001
+                settings.HPunchBase = 0.0000001
+                settings.DPunchBase = 0.0000001
+                settings.AimRecoilReduction = 5
+                settings.PunchRecover = 5
+                settings.MinRecoilPower = 0.0000001
+                settings.MaxRecoilPower = 0.0000001
+                settings.RecoilPowerStepAmount = 0.0000001
+                settings.MinSpread = 0
+                settings.MaxSpread = 0
+                settings.SpreadStepAmount = 0
+                settings.WalkMultiplier = 0.2
+                settings.SwayBase = 0.0000001
+                settings.MaxSway = 0.0000001
+                settings.LimbsDamage = {555, 555}
+                settings.TorsoDamage = {555, 555}
+                settings.HeadDamage = {555, 555}
+                settings.BulletPenetration = 50000
+                settings.FallOfDamage = 0
+                settings.OffsetAngle = 5
+                settings.OffsetSens = 0.1
+                settings.AllowPenetration = true
+                settings.PenetrationDistance = 1500
+                settings.CutOffGunshots = false
+                settings.CutOffDistance = true
+                settings.Distance = math.huge
+                settings.BDrop = 0.0000000000000001
+                settings.BSpeed = 500000000
+                settings.MeterSpeed = 90000
+                settings.SuppressMaxDistance = 10
+                settings.SuppressTime = 0.2
+                settings.BulletWhiz = true
+                settings.BWEmitter = 25
+                settings.BWMaxDistance = 200
+                settings.BulletFlare = false
+                settings.BulletFlareColor = Color3.fromRGB(255, 255, 255)
+                settings.Tracer = false
+                settings.TracerColor = Color3.fromRGB(255, 255, 255)
+                settings.TracerLightEmission = 1000
+                settings.TracerLightInfluence = 0
+                settings.TracerLifeTime = 0.1
+                settings.TracerWidth = 6
+                settings.RandomTracer = true
+                settings.TracerEveryXShots = 2
+                settings.TracerChance = 100
+                settings.BulletLight = false
+                settings.BulletLightBrightness = 1
+                settings.BulletLightColor = Color3.fromRGB(255, 255, 255)
+                settings.BulletLightRange = 40
+                settings.ExplosiveHit = true
+                settings.ExPressure = math.huge
+                settings.ExpRadius = math.huge
+                settings.DestroyJointRadiusPercent = math.huge
+                settings.ExplosionDamage = math.huge
+                settings.LauncherDamage = math.huge
+                settings.LauncherRadius = math.huge
+                settings.LauncherPressure = math.huge
+                settings.LauncherDestroyJointRadiusPercent = math.huge
+                settings.FastReload = true
+                settings.SlideLock = false
+                settings.MoveBolt = true
+                settings.BoltLock = false
+                settings.CanJam = false
+                settings.JamChance = 0
+                settings.IncludeChamberedBullet = true
+                settings.Chambered = true
+                settings.LauncherReady = false
+                settings.CanCheckMag = false
+                settings.ArcadeMode = false
+                settings.RainbowMode = true
+                settings.ModoTreino = false
+                settings.GunSize = 3.5
+                settings.GunFOVReduction = 3
+
+                local ammo = variables:FindFirstChild("Ammo")
+                if ammo then
+                    ammo.Value = 10000000000000
+                end
+            end
+        end
+    end
+end
+
+local function changeBulletType(newType)
+    local backpack = player:FindFirstChild("Backpack")
+    local character = player.Character
+    local equippedTool = character and character:FindFirstChildOfClass("Tool")
+
+    local toolsToModify = {}
+
+    if backpack then
+        for _, tool in ipairs(backpack:GetChildren()) do
+            if tool:FindFirstChild("ACS_Module") then
+                table.insert(toolsToModify, tool)
+            end
+        end
+    end
+
+    if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
+        table.insert(toolsToModify, equippedTool)
+    end
+
+    for _, tool in ipairs(toolsToModify) do
+        local variables = tool.ACS_Module:FindFirstChild("Variables")
+
+        if variables then
+            local settingsModule = variables:FindFirstChild("Settings")
+            if settingsModule then
+                local settings = require(settingsModule)
+
+                if newType == "original" then
+                    settings.BulletType = originalBulletTypes[tool.Name] or settings.BulletType
+                else
+                    settings.BulletType = newType
+                end
+            end
+        end
+    end
+end
+
+local function changeMode(mode)
+    local backpack = player:FindFirstChild("Backpack")
+    local character = player.Character
+    local equippedTool = character and character:FindFirstChildOfClass("Tool")
+
+    local toolsToModify = {}
+
+    if backpack then
+        for _, tool in ipairs(backpack:GetChildren()) do
+            if tool:FindFirstChild("ACS_Module") then
+                table.insert(toolsToModify, tool)
+            end
+        end
+    end
+
+    if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
+        table.insert(toolsToModify, equippedTool)
+    end
+
+    for _, tool in ipairs(toolsToModify) do
+        local variables = tool.ACS_Module:FindFirstChild("Variables")
+
+        if variables then
+            local settingsModule = variables:FindFirstChild("Settings")
+            if settingsModule then
+                local settings = require(settingsModule)
+                settings.Mode = mode
+            end
+        end
+    end
+end
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+
+    if input.KeyCode == Enum.KeyCode.K and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+        modifyToolSettings()
+    elseif input.KeyCode == Enum.KeyCode.N and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+        changeBulletType("original")
+    elseif input.KeyCode == Enum.KeyCode.M and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+        changeBulletType("M381")
+    elseif input.KeyCode == Enum.KeyCode.G and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+        changeMode("Semi")
+    elseif input.KeyCode == Enum.KeyCode.H and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+        changeMode("Auto")
+    end
+end)
+
+StarterGui:SetCore("SendNotification", {
+    Title = "jesus is the lord",
+    Text = "Script loaded, Press F9 for more info.",
+    Duration = 10
+})
+
+print("ITS RECOMMENDED NOT TO HOLD THE GUN OUT WHEN PRESSING CTRL + K.")
+print("Ctrl + K To start")
+print("Ctrl + N - Normal bullets")
+print("Ctrl + M - Explosive bullets")
+print("Ctrl + G - Semi firemode")
+print("Ctrl + H - Auto firemode")
+print("V 0.0.1")
+print("breakify jumpscare 😲")
