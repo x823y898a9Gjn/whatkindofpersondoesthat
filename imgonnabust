@@ -36,6 +36,7 @@ local function modifyToolSettings()
                 end
 
                 settings.OldCamSway = true
+                settings.BulletType = ".50BMG"
                 settings.NewCameraMultiplier = 1
                 settings.OldRecoil = true
                 settings.ChangeFOV = {50, 70}
