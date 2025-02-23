@@ -102,15 +102,6 @@ local function modifyToolSettings()
                 settings.BulletLightBrightness = 1
                 settings.BulletLightColor = Color3.fromRGB(255, 255, 255)
                 settings.BulletLightRange = 40
-                settings.ExplosiveHit = true
-                settings.ExPressure = math.huge
-                settings.ExpRadius = math.huge
-                settings.DestroyJointRadiusPercent = math.huge
-                settings.ExplosionDamage = math.huge
-                settings.LauncherDamage = math.huge
-                settings.LauncherRadius = math.huge
-                settings.LauncherPressure = math.huge
-                settings.LauncherDestroyJointRadiusPercent = math.huge
                 settings.FastReload = true
                 settings.SlideLock = false
                 settings.MoveBolt = true
