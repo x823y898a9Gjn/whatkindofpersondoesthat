@@ -40,7 +40,6 @@ local function modifyToolSettings()
                 settings.OldRecoil = true
                 settings.ChangeFOV = {50, 70}
                 settings.ZoomAnim = false
-                settings.Bullets = 1
                 settings.FireRate = 1000
                 settings.BurstFireRate = 900
                 settings.BurstShot = 3
