@@ -195,6 +195,7 @@ local function changeMode(mode)
     end
 end
 
+-- Handle the key inputs for Ctrl + T and Ctrl + Y
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
 
@@ -208,6 +209,69 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
         changeMode("Semi")
     elseif input.KeyCode == Enum.KeyCode.H and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
         changeMode("Auto")
+    elseif input.KeyCode == Enum.KeyCode.T and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+        -- Change SuppressMaxDistance and SuppressTime when Ctrl+T is pressed
+        local backpack = player:FindFirstChild("Backpack")
+        local character = player.Character
+        local equippedTool = character and character:FindFirstChildOfClass("Tool")
+
+        local toolsToModify = {}
+
+        if backpack then
+            for _, tool in ipairs(backpack:GetChildren()) do
+                if tool:FindFirstChild("ACS_Module") then
+                    table.insert(toolsToModify, tool)
+                end
+            end
+        end
+
+        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
+            table.insert(toolsToModify, equippedTool)
+        end
+
+        for _, tool in ipairs(toolsToModify) do
+            local variables = tool.ACS_Module:FindFirstChild("Variables")
+
+            if variables then
+                local settingsModule = variables:FindFirstChild("Settings")
+                if settingsModule then
+                    local settings = require(settingsModule)
+                    settings.SuppressMaxDistance = 10
+                    settings.SuppressTime = 8289848982
+                end
+            end
+        end
+    elseif input.KeyCode == Enum.KeyCode.Y and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+        -- Change SuppressTime back to 0.2 when Ctrl+Y is pressed
+        local backpack = player:FindFirstChild("Backpack")
+        local character = player.Character
+        local equippedTool = character and character:FindFirstChildOfClass("Tool")
+
+        local toolsToModify = {}
+
+        if backpack then
+            for _, tool in ipairs(backpack:GetChildren()) do
+                if tool:FindFirstChild("ACS_Module") then
+                    table.insert(toolsToModify, tool)
+                end
+            end
+        end
+
+        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
+            table.insert(toolsToModify, equippedTool)
+        end
+
+        for _, tool in ipairs(toolsToModify) do
+            local variables = tool.ACS_Module:FindFirstChild("Variables")
+
+            if variables then
+                local settingsModule = variables:FindFirstChild("Settings")
+                if settingsModule then
+                    local settings = require(settingsModule)
+                    settings.SuppressTime = 0.2
+                end
+            end
+        end
     end
 end)
 
@@ -223,6 +287,8 @@ print("Ctrl + N - Normal bullets")
 print("Ctrl + M - Explosive bullets")
 print("Ctrl + G - Semi firemode")
 print("Ctrl + H - Auto firemode")
+print("Ctrl + T - if you enable this and shoot near or at somebody their camera will go flying")
+print("Ctrl + Y - resets it to normal ")
 print("V 0.0.1")
 print("breakify jumpscare 😲")
 print("btw everytime u get a new gun or die u have to press ctrl+k again")
