@@ -2850,7 +2850,7 @@ local FireModeDropdown = MiscTab:CreateDropdown({
         ".303 British",
         "84mm HEAT551",
         "M381",
-        ".50BMG",
+        ".50 BMG",
         "7.62x51 NATO",
         "7.62x54mmR",
         "4.6x30mm",
