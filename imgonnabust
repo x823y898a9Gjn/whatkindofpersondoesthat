@@ -1,2925 +1,1240 @@
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-
-local Window = Rayfield:CreateWindow({
-    Name = "BGTP fucker",
-    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-    LoadingTitle = "go touch grass monkey",
-    LoadingSubtitle = "SUCK MA DICKKKKK AYY YAYAY YAY AY YA",
-    Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
- 
-    DisableRayfieldPrompts = false,
-    DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
- 
-    ConfigurationSaving = {
-       Enabled = true,
-       FolderName = nil, -- Create a custom folder for your hub/game
-       FileName = "bgtploverscript"
-    },
- 
-    Discord = {
-       Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
-       Invite = "", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
-       RememberJoins = true -- Set this to false to make them join the discord every time they load it up
-    },
- 
-    KeySystem = true, -- Set this to true to use our key system
-    KeySettings = {
-       Title = "Go touch GRASS!!!!",
-       Subtitle = "idk what to type here",
-       Note = "", -- Use this to tell the user how to get a key
-       FileName = "bgtpkey", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
-       SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
-       GrabKeyFromSite = true, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-       Key = {"https://raw.githubusercontent.com/x7x7723bvb3b/x8xx88x88yy3y8fas/refs/heads/main/xx676t7t627d6tt8878"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
-    }
- })
-
--- tabs
-local MainTab = Window:CreateTab("Main", nil) -- Title, Image
-local MainSection = MainTab:CreateSection("Main")
-
-local Button = MainTab:CreateButton({
-    Name = "All in One",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/x347bsbd8a24/ultraprotoucher/refs/heads/main/toucherv2",true))()
-    end,
- })
-
-
-local ModsTab = Window:CreateTab("Experimental", nil) -- Title, Image
-local ModsSection = ModsTab:CreateSection("Mods")
-
--- Create a variable to track the toggle state
-local modificationsEnabled = false
-
--- Create your toggle that sets this variable
-local Toggle = ModsTab:CreateToggle({
-    Name = "Enable Modifications",
-    CurrentValue = false,
-    Flag = "ModToggle",
-    Callback = function(Value)
-        modificationsEnabled = Value
-        if not modificationsEnabled then
-            
-            -- Optionally revert changes or disable functionality here
-        else
-            
-        end
-    end,
-})
-
--- Apply the toggle state when the player respawns
 local Players = game:GetService("Players")
-local function onPlayerSpawn(player)
-    -- Check if the toggle is on when the player spawns
-    if modificationsEnabled then
-        
-        -- Apply any modifications or functionality you want here
-    else
-        
-        -- Optionally, disable functionality if the toggle is off
-    end
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
+
+local localPlayer = Players.LocalPlayer
+local damageEvent = ReplicatedStorage:WaitForChild("EngineShared"):WaitForChild("Events"):WaitForChild("damage")
+
+-- Function to create the tool
+local function createKillTool()
+    local tool = Instance.new("Tool")
+    tool.Name = "Limb Breaker"
+    tool.ToolTip = "Click to break a playuers limb"
+    tool.RequiresHandle = false -- Set to false so no physical handle is needed
+
+    return tool
 end
 
--- Connect the function to the PlayerAdded and CharacterAdded events
-Players.PlayerAdded:Connect(function(player)
-    player.CharacterAdded:Connect(function(character)
-        onPlayerSpawn(player)
-    end)
+local killTool = createKillTool()
+killTool.Parent = localPlayer.Backpack -- Give the tool to the player
+
+local mouse = localPlayer:GetMouse()
+local isToolEquipped = false
+
+-- Event for when the tool is equipped
+killTool.Equipped:Connect(function()
+    isToolEquipped = true
+    print("InvisibleKillerTool equipped!")
 end)
 
-local Slider = ModsTab:CreateSlider({
-    Name = "Fire Rate",
-    Range = {1000, 5000000},
-    Increment = 1000,
-    Suffix = "Rate",
-    CurrentValue = 2000,
-    Flag = "FireRateSlider",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.FireRate = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "Bullets",
-    Range = {1, 100},
-    Increment = 1,
-    Suffix = "Rate",
-    CurrentValue = 1,
-    Flag = "ddddwwd",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.Bullets = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-local FireModeDropdown = ModsTab:CreateDropdown({
-    Name = "Fire Mode",
-    Options = {"Semi", "Auto"},
-    CurrentOption = {"Semi"}, -- Default option
-    MultipleOptions = false,
-    Flag = "firemode",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local selectedMode = Option[1]
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.Mode = selectedMode
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "SpreadStepAmount",
-    Range = {0, 5000},
-    Increment = 100,
-    Suffix = "Rate",
-    CurrentValue = 1,
-    Flag = "SpreadStepAmount",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.SpreadStepAmount = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "WalkMultiplier",
-    Range = {0, 5000},
-    Increment = 100,
-    Suffix = "Rate",
-    CurrentValue = 1,
-    Flag = "WalkMultiplier",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.WalkMultiplier = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "SwayBase",
-    Range = {0, 500},
-    Increment = 10,
-    Suffix = "Rate",
-    CurrentValue = 1,
-    Flag = "SwayBase",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.SwayBase = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "MaxSway",
-    Range = {0, 500},
-    Increment = 10,
-    Suffix = "Rate",
-    CurrentValue = 1,
-    Flag = "MaxSway",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.MaxSway = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "BulletPenetration",
-    Range = {0, 50000},
-    Increment = 10,
-    Suffix = "Rate",
-    CurrentValue = 1,
-    Flag = "BulletPenetration",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.BulletPenetration = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "FallOfDamage",
-    Range = {0, 50000},
-    Increment = 10,
-    Suffix = "Rate",
-    CurrentValue = 0,
-    Flag = "FallOfDamage",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.FallOfDamage = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "OffsetAngle",
-    Range = {0, 500},
-    Increment = 5,
-    Suffix = "Rate",
-    CurrentValue = 5,
-    Flag = "OffsetAngle",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.OffsetAngle = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "OffsetAngle",
-    Range = {0, 10},
-    Increment = 0.1,
-    Suffix = "Rate",
-    CurrentValue = 0.1,
-    Flag = "OffsetAngle",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.OffsetSens = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "OffsetAngle",
-    Range = {0, 10},
-    Increment = 0.1,
-    Suffix = "Rate",
-    CurrentValue = 0.1,
-    Flag = "OffsetAngle",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.OffsetSens = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "AllowPenetration",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "AllowPenetrationf",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.AllowPenetration = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "PenetrationDistance",
-    Range = {0, 5000000},
-    Increment = 1000,
-    Suffix = "Rate",
-    CurrentValue = 1500,
-    Flag = "BulletPenetration",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.PenetrationDistance = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "CutOffGunshots",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "CutOffGunshots",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.CutOffGunshots = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "CutOffDistance",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "CutOffDistance",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.CutOffDistance = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "Distance",
-    Range = {0, 5000000},
-    Increment = 1000,
-    Suffix = "Rate",
-    CurrentValue = 1,
-    Flag = "Distance",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.Distance = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "BDrop",
-    Range = {0.1, 500},
-    Increment = 0.1,
-    Suffix = "Rate",
-    CurrentValue = 0.1,
-    Flag = "BDrop",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.BDrop = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "BSpeed",
-    Range = {1000, 5000000},
-    Increment = 1000,
-    Suffix = "Rate",
-    CurrentValue = 1000,
-    Flag = "BSpeed",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.BSpeed = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "MeterSpeed",
-    Range = {1000, 5000000},
-    Increment = 1000,
-    Suffix = "Rate",
-    CurrentValue = 1000,
-    Flag = "MeterSpeed",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.MeterSpeed = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "SuppressMaxDistance",
-    Range = {10, 1000},
-    Increment = 10,
-    Suffix = "Rate",
-    CurrentValue = 10,
-    Flag = "SuppressMaxDistance",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.SuppressMaxDistance = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "SuppressTime",
-    Range = {0.1, 100000},
-    Increment = 0.1,
-    Suffix = "Rate",
-    CurrentValue = 0.2,
-    Flag = "SuppressTime",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.SuppressTime = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "BulletWhiz",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "BulletWhiz",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.BulletWhiz = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "BWEmitter",
-    Range = {25, 100000},
-    Increment = 25,
-    Suffix = "Rate",
-    CurrentValue = 25,
-    Flag = "BWEmitter",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.BWEmitter = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "BWMaxDistance",
-    Range = {200, 100000},
-    Increment = 200,
-    Suffix = "Rate",
-    CurrentValue = 200,
-    Flag = "BWMaxDistance",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.BWMaxDistance = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "BulletFlare",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "BulletFlare",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.BulletFlare = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "Tracer",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "Tracer",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.Tracer = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "TracerLightEmission",
-    Range = {1000, 100000},
-    Increment = 1000,
-    Suffix = "Rate",
-    CurrentValue = 1000,
-    Flag = "TracerLightEmission",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.TracerLightEmission = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "TracerLightInfluence",
-    Range = {1, 1000},
-    Increment = 1,
-    Suffix = "Rate",
-    CurrentValue = 0,
-    Flag = "TracerLightInfluence",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.TracerLightInfluence = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "TracerLifeTime",
-    Range = {0.1, 1000},
-    Increment = 0.1,
-    Suffix = "Rate",
-    CurrentValue = 0.1,
-    Flag = "TracerLifeTime",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.TracerLifeTime = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "TracerWidth",
-    Range = {1, 10000},
-    Increment = 1,
-    Suffix = "Rate",
-    CurrentValue = 6,
-    Flag = "TracerWidth",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.TracerWidth = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "RandomTracer",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "RandomTracer",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.RandomTracer = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "TracerEveryXShots",
-    Range = {1, 1000},
-    Increment = 1,
-    Suffix = "Rate",
-    CurrentValue = 2,
-    Flag = "TracerEveryXShots",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.TracerEveryXShots = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "TracerChance",
-    Range = {1, 10000},
-    Increment = 1,
-    Suffix = "Rate",
-    CurrentValue = 100,
-    Flag = "TracerChance",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.TracerChance = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "BulletLight",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "BulletLight",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.BulletLight = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "BulletLightBrightness",
-    Range = {1, 1000},
-    Increment = 1,
-    Suffix = "Rate",
-    CurrentValue = 1,
-    Flag = "BulletLightBrightness",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.BulletLightBrightness = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "BulletLightRange",
-    Range = {10, 1000},
-    Increment = 10,
-    Suffix = "Rate",
-    CurrentValue = 40,
-    Flag = "BulletLightRange",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.BulletLightRange = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "FastReload",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "FastReload",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.FastReload = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "SlideLock",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "SlideLock",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.SlideLock = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "MoveBolt",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "MoveBolt",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.MoveBolt = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "BoltLock",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "BoltLock",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.BoltLock = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "CanJam",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "CanJam",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.CanJam = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "JamChance",
-    Range = {1, 100},
-    Increment = 1,
-    Suffix = "Rate",
-    CurrentValue = 0,
-    Flag = "JamChance",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.JamChance = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "IncludeChamberedBullet",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "IncludeChamberedBullet",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.IncludeChamberedBullet = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "Chambered",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "Chambered",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.Chambered = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "LauncherReady",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "LauncherReady",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.LauncherReady = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "CanCheckMag",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "CanCheckMag",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.CanCheckMag = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "ArcadeMode",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "ArcadeMode",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.ArcadeMode = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "RainbowMode",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "RainbowMode",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.RainbowMode = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-local PenetrationDropdown = ModsTab:CreateDropdown({
-    Name = "ModoTreino",
-    Options = {"true", "false"},
-    CurrentOption = {"false"}, -- Default option
-    MultipleOptions = false,
-    Flag = "ModoTreino",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local allowPenetration = Option[1] == "true" -- Convert string to boolean
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.ModoTreino = allowPenetration
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "GunSize",
-    Range = {0.5, 100},
-    Increment = 0.5,
-    Suffix = "Rate",
-    CurrentValue = 3.5,
-    Flag = "GunSize",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.GunSize = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-
-local Slider = ModsTab:CreateSlider({
-    Name = "GunFOVReduction",
-    Range = {1, 100},
-    Increment = 1,
-    Suffix = "Rate",
-    CurrentValue = 3,
-    Flag = "GunFOVReduction",
-    Callback = function(Value)
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- If the toggle is on, proceed with modifying the settings
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.GunFOVReduction = Value  -- Change FireRate to the slider's current value
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-
-
-local MiscTab = Window:CreateTab("Misc", nil) -- Title, Image
-local MiscSection = MiscTab:CreateSection("Misc")
-
-
-
-local Button = MiscTab:CreateButton({
-    Name = "Infinite Ammo",
-    Callback = function()
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            return
-        end
-
-        -- Modify the settings when the button is clicked
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local ammo = variables:FindFirstChild("Ammo")
-                    if ammo then
-                        ammo.Value = 898483884  -- Set ammo to infinite
-                    end
-                end
-            end
-        end
-    end,
-})
-
-
-
-
-local Button = MiscTab:CreateButton({
-    Name = "No Recoil",
-    Callback = function()
-        if not modificationsEnabled then
-            -- Do nothing if modifications are disabled
-            
-            return
-        end
-
-        -- Modify the settings when the button is clicked
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.VRecoil = {0.0000001, 0.0000001}
-                        settings.HRecoil = {0.0000001, 0.0000001}
-                        settings.AimRecover = 5
-                        settings.RecoilPunch = 0
-                        settings.VPunchBase = 0.0000001
-                        settings.HPunchBase = 0.0000001
-                        settings.DPunchBase = 0.0000001
-                        settings.AimRecoilReduction = 5
-                        settings.PunchRecover = 5
-                        settings.MinRecoilPower = 0.0000001
-                        settings.MaxRecoilPower = 0.0000001
-                        settings.RecoilPowerStepAmount = 0.0000001
-                        settings.MinSpread = 0
-                        settings.MaxSpread = 0
-                    end
-                end
-            end
-        end
-
-    end,
-})
-
-
-
-local FireModeDropdown = MiscTab:CreateDropdown({
-    Name = "Bullet Type",
-    Options = {
-        "7.62x39mm",
-        "5.45x39mm",
-        "5.45x39mm9",
-        "Dark Energy Plasma",
-        "9x39mm",
-        "84mm HEAT",
-        "Shrapnel-25",
-        "7.62x51mm",
-        "Plasma",
-        "7.92x57mm Mauser",
-        "9x21mm BT gzh",
-        ".30-06",
-        "12x70 Buckshot",
-        "12.7x55mm",
-        ".45 ACP",
-        "9x19mm",
-        ".303 British",
-        "84mm HEAT551",
-        "M381",
-        ".50 BMG",
-        "7.62x51 NATO",
-        "7.62x54mmR",
-        "4.6x30mm",
-        "5.56x45mm Varmageddon",
-        "FN 5.7x28mm",
-        "9x19 PBP gzh",
-        "12x70 AP-20 Slug",
-        ".300 AAC Blackout",
-        "12.7x108mm BZT-44M",
-        "OSR D.E.P",
-        ".50 BMG",
-        "9x18mm",
-        "7.62x25 Tokarev",
-        "7.62x39mm AP HE",
-        "OG-7V",
-        "PG-7VL",
-        "9x21mm Gyurza",
-        "7.92x33mm",
-        ".338 Lapua",
-        ".336 TKM",
-        "20x70 Buckshot",
-        "5.56x45mm M995",
-        "5.56x45mm",
-        "7.7x58mm Arisaka",
-        "12x70 Dragons Breath",
-        "5.56x45mm MK 318",
-        ".30 Carbine",
-        "7.5x54mm French",
-        "6.8x51mm"
-    },
-    CurrentOption = {}, -- No default option selected
-    MultipleOptions = false,
-    Flag = "BulletType",
-    Callback = function(Option)
-        if not modificationsEnabled then return end
-
-        local selectedBulletType = Option[1]
-
-        local Players = game:GetService("Players")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local backpack = player:WaitForChild("Backpack")
-        local equippedTool = character and character:FindFirstChildOfClass("Tool")
-        local toolsToModify = {}
-
-        if backpack then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if tool:FindFirstChild("ACS_Module") then
-                    table.insert(toolsToModify, tool)
-                end
-            end
-        end
-
-        if equippedTool and equippedTool:FindFirstChild("ACS_Module") then
-            table.insert(toolsToModify, equippedTool)
-        end
-
-        for _, tool in ipairs(toolsToModify) do
-            local acsModule = tool:FindFirstChild("ACS_Module")
-            if acsModule then
-                local variables = acsModule:FindFirstChild("Variables")
-                if variables then
-                    local settingsModule = variables:FindFirstChild("Settings")
-                    if settingsModule then
-                        local settings = require(settingsModule)
-                        settings.BulletType = selectedBulletType
-                    end
-                end
-            end
-        end
-    end,
-})
+-- Event for when the tool is unequipped
+killTool.Unequipped:Connect(function()
+    isToolEquipped = false
+    print("InvisibleKillerTool unequipped.")
+end)
+
+-- Event for when the player clicks
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 and not gameProcessedEvent and isToolEquipped then
+        print("Mouse clicked with invisible tool equipped!")
+
+        -- Perform a raycast from the mouse to find the hit target
+        local target = mouse.Target -- This is the actual part that was clicked
+        local targetHumanoid = nil
+        local targetPart = nil -- This will store the specific limb/part that was clicked
+
+        if target then
+            local character = target.Parent
+            -- Check if the clicked part's parent is a character and belongs to a player
+            if character and Players:GetPlayerFromCharacter(character) and character:FindFirstChildOfClass("Humanoid") then
+                targetHumanoid = character:FindFirstChildOfClass("Humanoid")
+                targetPart = target -- Assign the actual clicked part to targetPart
+            end
+        end
+
+        if targetHumanoid and targetPart and targetHumanoid.Health > 0 then
+            local playerToKill = Players:GetPlayerFromCharacter(targetHumanoid.Parent)
+            if playerToKill and playerToKill ~= localPlayer then -- Ensure it's another player
+                print("Attempting to kill: " .. playerToKill.Name .. " by hitting " .. targetPart.Name)
+
+                local args = {
+                    [1] = targetHumanoid,
+                    [2] = targetPart, -- Now dynamically the clicked part (Head, Arm, Leg, Torso, etc.)
+                    [3] = CFrame.new(targetPart.Position), -- Use the clicked part's position for CFrame
+                    [4] = targetPart.Position, -- Use the clicked part's position
+                    [5] = targetPart.Position, -- Use the clicked part's position
+                    [6] = 1.9375000000000004,
+                    [7] = {
+                        bulletLight = {
+                            enabled = true,
+                            brightness = 1,
+                            lightRange = 10,
+                            color = Color3.new(0, 1, 0)
+                        },
+                        lightBleedChance = 0,
+                        penPower = 1000,
+                        width = 1,
+                        fragmentChance = 100000000,
+                        heavyBleedChance = 0,
+                        tracer = {
+                            enabled = true,
+                            everyXShots = 2,
+                            lightInfluence = 0,
+                            lightEmission = 1,
+                            chance = 70,
+                            color = Color3.new(0, 1, 0),
+                            random = false,
+                            width = 3
+                        },
+                        speed = 840,
+                        armorDamage = 1003,
+                        ricochetChance = 0,
+                        damage = 1 -- Keep damage at 100 as it was working for killing
+                    },
+                    [8] = {
+                        VPunchBase = 1,
+                        BoltExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        BulletWhiz = true,
+                        FocusOnSight = false,
+                        Chambered = true,
+                        ServerGunPos = CFrame.new(-0.30000001192092896, -1, -0.30000001192092896, -4.371138828673793e-08, 0, -1, 1, -4.371138828673793e-08, -4.371138828673793e-08, -4.371138828673793e-08, -1, 1.910685465164705e-15),
+                        NewCameraMultiplier = 1,
+                        CutOffGunshots = false,
+                        ExpRadius = 25,
+                        Mode = "Semi",
+                        BurstFireRate = 900,
+                        IncludeChamberedBullet = true,
+                        CanJam = false,
+                        ReloadType = 1,
+                        Pitches = {
+                            1,
+                            1.12
+                        },
+                        MaxRecoilPower = 1,
+                        BulletFlareColor = Color3.new(1, 0.40392157435417175, 0.32549020648002625),
+                        LimbsDamage = {
+                            30,
+                            45
+                        },
+                        JamChance = 1000,
+                        BulletPenetration = 60,
+                        CanCheckMag = false,
+                        BulletLight = false,
+                        TracerLightInfluence = 0,
+                        ServerBoltExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        TracerLifeTime = 0.05,
+                        MaxSway = 1,
+                        TracerLightEmission = 1,
+                        RecoilPunch = 0.2,
+                        BWMaxDistance = 200,
+                        RightPos = CFrame.new(-0.6000000238418579, -0.10000000149011612, -0.949999988079071, 1, -0, 0, 0, -4.371138828673793e-08, 1, 0, -1, -4.371138828673793e-08),
+                        BulletLightColor = Color3.new(1, 0.40392157435417175, 0.32549020648002625),
+                        FireModes = {
+                            Burst = false,
+                            Semi = true,
+                            Auto = true,
+                            Smoke = false,
+                            ChangeFiremode = true,
+                            Explosive = false
+                        },
+                        AutoChamber = false,
+                        BeltFed = false,
+                        AllowPenetration = true,
+                        ZoomAnim = false,
+                        RandomTracer = false,
+                        MinRecoilPower = -1,
+                        MagCount = true,
+                        TorsoDamage = {
+                            75,
+                            113
+                        },
+                        FocusOnSight2 = false,
+                        BulletLightBrightness = 1,
+                        OffsetSens = 0.1,
+                        RainbowMode = false,
+                        Name = "SA-58",
+                        Ammo = 20,
+                        AimRecoilReduction = 1.5,
+                        BulletLightRange = 40,
+                        CutOffDistance = true,
+                        OffsetAngle = 5,
+                        SlideLock = true,
+                        BSpeed = 5000,
+                        WalkMultiplier = 0.2,
+                        DestroyJointRadiusPercent = 0,
+                        LauncherDamage = 100,
+                        Bullets = 1,
+                        BWEmitter = 25,
+                        FireRate = 750,
+                        ExplosiveHit = false,
+                        UGL = false,
+                        SuppressTime = 1000000,
+                        Tracer = true,
+                        OldCamSway = true,
+                        BulletType = "7.62x51mm",
+                        LeftArmPos = CFrame.new(1.0499999523162842, 0.8999999761581421, -1.399999976158142, 0.8516507148742676, 0.3099755048751831, 0.4226182699203491, -0.33170679211616516, -0.30552393198013306, 0.8925389051437378, 0.4057852029800415, -0.9003167152404785, -0.15737870335578918),
+                        TracerWidth = 7,
+                        PenetrationDistance = 7,
+                        BDrop = 0.1,
+                        EnableHolster = false,
+                        SlideExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        TracerChance = 70,
+                        Distance = 20000,
+                        FallOfDamage = 1,
+                        TracerColor = Color3.new(1, 0.40392157435417175, 0.32549020648002625),
+                        HolsterTo = "Torso",
+                        ChangeFOV = {
+                            25,
+                            60
+                        },
+                        RightArmPos = CFrame.new(-0.8500000238418579, -0.20000000298023224, -1.2000000476837158, 1, -0, 0, 0, -4.371138828673793e-08, 1, 0, -1, -4.371138828673793e-08),
+                        MinSpread = 0,
+                        SpreadStepAmount = 1.5,
+                        ModoTreino = false,
+                        Thermal = false,
+                        HRecoil = {
+                            1,
+                            10
+                        },
+                        SuppressMaxDistance = 10,
+                        VRecoil = {
+                            35,
+                            70
+                        },
+                        AimRecover = 0.4,
+                        LauncherRadius = 25,
+                        GunType = 1,
+                        BurstShot = 3,
+                        LeftPos = CFrame.new(1.2000000476837158, 0.4000000059604645, -1.600000023841858, 0.7697511315345764, 0.28016647696495056, 0.5735764503479004, -0.29576510190963745, -0.6397386193275452, 0.7094064950942993, 0.5656908750534058, -0.7157102823257446, -0.40957608819007874),
+                        RecoilPowerStepAmount = 0.1,
+                        LauncherPressure = 500,
+                        ExPressure = 500,
+                        HeadDamage = {
+                            1,
+                            1
+                        },
+                        MaxSpread = 0.5,
+                        LauncherDestroyJointRadiusPercent = 0,
+                        FastReload = true,
+                        ChamberWhileAim = false,
+                        GunPos = CFrame.new(0.15000000596046448, -0.15000000596046448, 1, 1, 0, 0, 0, -4.371138828673793e-08, -1, 0, 1, -4.371138828673793e-08),
+                        TracerEveryXShots = 5,
+                        GunSize = 3.5,
+                        HPunchBase = 0.5,
+                        ServerSlideExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        LauncherReady = false,
+                        MoveBolt = false,
+                        ArcadeMode = false,
+                        PunchRecover = 0.1,
+                        BulletFlare = false,
+                        SwayBase = 0,
+                        HolsterPos = CFrame.new(0.25, -0.10000000149011612, -0.800000011920929, 0.6403416395187378, -0.7631294131278992, -0.08715573698282242, 0.7582467198371887, 0.6461606025695801, -0.08682408183813095, 0.12257461249828339, -0.010488472878932953, 0.9924039244651794),
+                        OldRecoil = true,
+                        GunFOVReduction = 3,
+                        BoltLock = false,
+                        DPunchBase = 1,
+                        ExplosionDamage = 100
+                    },
+                    [9] = "canYouBypassThis???\226\128\142"
+                }
+
+                -- Attempt to fire the server with the faked arguments
+                damageEvent:FireServer(unpack(args))
+            end
+        end
+    end
+end)
+
+
+
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
+
+local localPlayer = Players.LocalPlayer
+local damageEvent = ReplicatedStorage:WaitForChild("EngineShared"):WaitForChild("Events"):WaitForChild("damage")
+
+-- Function to create the tool
+local function createKillTool()
+    local tool = Instance.new("Tool")
+    tool.Name = "bleed"
+    tool.ToolTip = "Click to make a player bleed"
+    tool.RequiresHandle = false -- Set to false so no physical handle is needed
+
+    return tool
+end
+
+local killTool = createKillTool()
+killTool.Parent = localPlayer.Backpack -- Give the tool to the player
+
+local mouse = localPlayer:GetMouse()
+local isToolEquipped = false
+
+-- Event for when the tool is equipped
+killTool.Equipped:Connect(function()
+    isToolEquipped = true
+    print("InvisibleKillerTool equipped!")
+end)
+
+-- Event for when the tool is unequipped
+killTool.Unequipped:Connect(function()
+    isToolEquipped = false
+    print("InvisibleKillerTool unequipped.")
+end)
+
+-- Event for when the player clicks
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 and not gameProcessedEvent and isToolEquipped then
+        print("Mouse clicked with invisible tool equipped!")
+
+        -- Perform a raycast from the mouse to find the hit target
+        local target = mouse.Target -- This is the actual part that was clicked
+        local targetHumanoid = nil
+        local targetPart = nil -- This will store the specific limb/part that was clicked
+
+        if target then
+            local character = target.Parent
+            -- Check if the clicked part's parent is a character and belongs to a player
+            if character and Players:GetPlayerFromCharacter(character) and character:FindFirstChildOfClass("Humanoid") then
+                targetHumanoid = character:FindFirstChildOfClass("Humanoid")
+                targetPart = target -- Assign the actual clicked part to targetPart
+            end
+        end
+
+        if targetHumanoid and targetPart and targetHumanoid.Health > 0 then
+            local playerToKill = Players:GetPlayerFromCharacter(targetHumanoid.Parent)
+            if playerToKill and playerToKill ~= localPlayer then -- Ensure it's another player
+                print("Attempting to kill: " .. playerToKill.Name .. " by hitting " .. targetPart.Name)
+
+                local args = {
+                    [1] = targetHumanoid,
+                    [2] = targetPart, -- Now dynamically the clicked part (Head, Arm, Leg, Torso, etc.)
+                    [3] = CFrame.new(targetPart.Position), -- Use the clicked part's position for CFrame
+                    [4] = targetPart.Position, -- Use the clicked part's position
+                    [5] = targetPart.Position, -- Use the clicked part's position
+                    [6] = 1.9375000000000004,
+                    [7] = {
+                        bulletLight = {
+                            enabled = true,
+                            brightness = 1,
+                            lightRange = 10,
+                            color = Color3.new(0, 1, 0)
+                        },
+                        lightBleedChance = 100000000,
+                        penPower = 1000,
+                        width = 1,
+                        fragmentChance = 0,
+                        heavyBleedChance = 10000000,
+                        tracer = {
+                            enabled = true,
+                            everyXShots = 2,
+                            lightInfluence = 0,
+                            lightEmission = 1,
+                            chance = 70,
+                            color = Color3.new(0, 1, 0),
+                            random = false,
+                            width = 3
+                        },
+                        speed = 840,
+                        armorDamage = 1003,
+                        ricochetChance = 0,
+                        damage = 1 -- Keep damage at 100 as it was working for killing
+                    },
+                    [8] = {
+                        VPunchBase = 1,
+                        BoltExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        BulletWhiz = true,
+                        FocusOnSight = false,
+                        Chambered = true,
+                        ServerGunPos = CFrame.new(-0.30000001192092896, -1, -0.30000001192092896, -4.371138828673793e-08, 0, -1, 1, -4.371138828673793e-08, -4.371138828673793e-08, -4.371138828673793e-08, -1, 1.910685465164705e-15),
+                        NewCameraMultiplier = 1,
+                        CutOffGunshots = false,
+                        ExpRadius = 25,
+                        Mode = "Semi",
+                        BurstFireRate = 900,
+                        IncludeChamberedBullet = true,
+                        CanJam = false,
+                        ReloadType = 1,
+                        Pitches = {
+                            1,
+                            1.12
+                        },
+                        MaxRecoilPower = 1,
+                        BulletFlareColor = Color3.new(1, 0.40392157435417175, 0.32549020648002625),
+                        LimbsDamage = {
+                            30,
+                            45
+                        },
+                        JamChance = 1000,
+                        BulletPenetration = 60,
+                        CanCheckMag = false,
+                        BulletLight = false,
+                        TracerLightInfluence = 0,
+                        ServerBoltExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        TracerLifeTime = 0.05,
+                        MaxSway = 1,
+                        TracerLightEmission = 1,
+                        RecoilPunch = 0.2,
+                        BWMaxDistance = 200,
+                        RightPos = CFrame.new(-0.6000000238418579, -0.10000000149011612, -0.949999988079071, 1, -0, 0, 0, -4.371138828673793e-08, 1, 0, -1, -4.371138828673793e-08),
+                        BulletLightColor = Color3.new(1, 0.40392157435417175, 0.32549020648002625),
+                        FireModes = {
+                            Burst = false,
+                            Semi = true,
+                            Auto = true,
+                            Smoke = false,
+                            ChangeFiremode = true,
+                            Explosive = false
+                        },
+                        AutoChamber = false,
+                        BeltFed = false,
+                        AllowPenetration = true,
+                        ZoomAnim = false,
+                        RandomTracer = false,
+                        MinRecoilPower = -1,
+                        MagCount = true,
+                        TorsoDamage = {
+                            75,
+                            113
+                        },
+                        FocusOnSight2 = false,
+                        BulletLightBrightness = 1,
+                        OffsetSens = 0.1,
+                        RainbowMode = false,
+                        Name = "SA-58",
+                        Ammo = 20,
+                        AimRecoilReduction = 1.5,
+                        BulletLightRange = 40,
+                        CutOffDistance = true,
+                        OffsetAngle = 5,
+                        SlideLock = true,
+                        BSpeed = 5000,
+                        WalkMultiplier = 0.2,
+                        DestroyJointRadiusPercent = 0,
+                        LauncherDamage = 100,
+                        Bullets = 1,
+                        BWEmitter = 25,
+                        FireRate = 750,
+                        ExplosiveHit = false,
+                        UGL = false,
+                        SuppressTime = 1000000,
+                        Tracer = true,
+                        OldCamSway = true,
+                        BulletType = "7.62x51mm",
+                        LeftArmPos = CFrame.new(1.0499999523162842, 0.8999999761581421, -1.399999976158142, 0.8516507148742676, 0.3099755048751831, 0.4226182699203491, -0.33170679211616516, -0.30552393198013306, 0.8925389051437378, 0.4057852029800415, -0.9003167152404785, -0.15737870335578918),
+                        TracerWidth = 7,
+                        PenetrationDistance = 7,
+                        BDrop = 0.1,
+                        EnableHolster = false,
+                        SlideExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        TracerChance = 70,
+                        Distance = 20000,
+                        FallOfDamage = 1,
+                        TracerColor = Color3.new(1, 0.40392157435417175, 0.32549020648002625),
+                        HolsterTo = "Torso",
+                        ChangeFOV = {
+                            25,
+                            60
+                        },
+                        RightArmPos = CFrame.new(-0.8500000238418579, -0.20000000298023224, -1.2000000476837158, 1, -0, 0, 0, -4.371138828673793e-08, 1, 0, -1, -4.371138828673793e-08),
+                        MinSpread = 0,
+                        SpreadStepAmount = 1.5,
+                        ModoTreino = false,
+                        Thermal = false,
+                        HRecoil = {
+                            1,
+                            10
+                        },
+                        SuppressMaxDistance = 10,
+                        VRecoil = {
+                            35,
+                            70
+                        },
+                        AimRecover = 0.4,
+                        LauncherRadius = 25,
+                        GunType = 1,
+                        BurstShot = 3,
+                        LeftPos = CFrame.new(1.2000000476837158, 0.4000000059604645, -1.600000023841858, 0.7697511315345764, 0.28016647696495056, 0.5735764503479004, -0.29576510190963745, -0.6397386193275452, 0.7094064950942993, 0.5656908750534058, -0.7157102823257446, -0.40957608819007874),
+                        RecoilPowerStepAmount = 0.1,
+                        LauncherPressure = 500,
+                        ExPressure = 500,
+                        HeadDamage = {
+                            1,
+                            1
+                        },
+                        MaxSpread = 0.5,
+                        LauncherDestroyJointRadiusPercent = 0,
+                        FastReload = true,
+                        ChamberWhileAim = false,
+                        GunPos = CFrame.new(0.15000000596046448, -0.15000000596046448, 1, 1, 0, 0, 0, -4.371138828673793e-08, -1, 0, 1, -4.371138828673793e-08),
+                        TracerEveryXShots = 5,
+                        GunSize = 3.5,
+                        HPunchBase = 0.5,
+                        ServerSlideExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        LauncherReady = false,
+                        MoveBolt = false,
+                        ArcadeMode = false,
+                        PunchRecover = 0.1,
+                        BulletFlare = false,
+                        SwayBase = 0,
+                        HolsterPos = CFrame.new(0.25, -0.10000000149011612, -0.800000011920929, 0.6403416395187378, -0.7631294131278992, -0.08715573698282242, 0.7582467198371887, 0.6461606025695801, -0.08682408183813095, 0.12257461249828339, -0.010488472878932953, 0.9924039244651794),
+                        OldRecoil = true,
+                        GunFOVReduction = 3,
+                        BoltLock = false,
+                        DPunchBase = 1,
+                        ExplosionDamage = 100
+                    },
+                    [9] = "canYouBypassThis???\226\128\142"
+                }
+
+                -- Attempt to fire the server with the faked arguments
+                damageEvent:FireServer(unpack(args))
+            end
+        end
+    end
+end)
+
+
+
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
+
+local localPlayer = Players.LocalPlayer
+local damageEvent = ReplicatedStorage:WaitForChild("EngineShared"):WaitForChild("Events"):WaitForChild("damage")
+
+-- Function to create the tool
+local function createKillTool()
+    local tool = Instance.new("Tool")
+    tool.Name = "Damage - 65"
+    tool.ToolTip = "Click to damage"
+    tool.RequiresHandle = false -- Set to false so no physical handle is needed
+
+    return tool
+end
+
+local killTool = createKillTool()
+killTool.Parent = localPlayer.Backpack -- Give the tool to the player
+
+local mouse = localPlayer:GetMouse()
+local isToolEquipped = false
+
+-- Event for when the tool is equipped
+killTool.Equipped:Connect(function()
+    isToolEquipped = true
+    print("InvisibleKillerTool equipped!")
+end)
+
+-- Event for when the tool is unequipped
+killTool.Unequipped:Connect(function()
+    isToolEquipped = false
+    print("InvisibleKillerTool unequipped.")
+end)
+
+-- Event for when the player clicks
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 and not gameProcessedEvent and isToolEquipped then
+        print("Mouse clicked with invisible tool equipped!")
+
+        -- Perform a raycast from the mouse to find the hit target
+        local target = mouse.Target -- This is the actual part that was clicked
+        local targetHumanoid = nil
+        local targetPart = nil -- This will store the specific limb/part that was clicked
+
+        if target then
+            local character = target.Parent
+            -- Check if the clicked part's parent is a character and belongs to a player
+            if character and Players:GetPlayerFromCharacter(character) and character:FindFirstChildOfClass("Humanoid") then
+                targetHumanoid = character:FindFirstChildOfClass("Humanoid")
+                targetPart = target -- Assign the actual clicked part to targetPart
+            end
+        end
+
+        if targetHumanoid and targetPart and targetHumanoid.Health > 0 then
+            local playerToKill = Players:GetPlayerFromCharacter(targetHumanoid.Parent)
+            if playerToKill and playerToKill ~= localPlayer then -- Ensure it's another player
+                print("Attempting to kill: " .. playerToKill.Name .. " by hitting " .. targetPart.Name)
+
+                local args = {
+                    [1] = targetHumanoid,
+                    [2] = targetPart, -- Now dynamically the clicked part (Head, Arm, Leg, Torso, etc.)
+                    [3] = CFrame.new(targetPart.Position), -- Use the clicked part's position for CFrame
+                    [4] = targetPart.Position, -- Use the clicked part's position
+                    [5] = targetPart.Position, -- Use the clicked part's position
+                    [6] = 1.9375000000000004,
+                    [7] = {
+                        bulletLight = {
+                            enabled = true,
+                            brightness = 1,
+                            lightRange = 10,
+                            color = Color3.new(0, 1, 0)
+                        },
+                        lightBleedChance = 10000,
+                        penPower = 1000,
+                        width = 1,
+                        fragmentChance = 0,
+                        heavyBleedChance = 10000,
+                        tracer = {
+                            enabled = true,
+                            everyXShots = 2,
+                            lightInfluence = 0,
+                            lightEmission = 1,
+                            chance = 70,
+                            color = Color3.new(0, 1, 0),
+                            random = false,
+                            width = 3
+                        },
+                        speed = 840,
+                        armorDamage = 1003,
+                        ricochetChance = 0,
+                        damage = 65 -- Keep damage at 100 as it was working for killing
+                    },
+                    [8] = {
+                        VPunchBase = 1,
+                        BoltExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        BulletWhiz = true,
+                        FocusOnSight = false,
+                        Chambered = true,
+                        ServerGunPos = CFrame.new(-0.30000001192092896, -1, -0.30000001192092896, -4.371138828673793e-08, 0, -1, 1, -4.371138828673793e-08, -4.371138828673793e-08, -4.371138828673793e-08, -1, 1.910685465164705e-15),
+                        NewCameraMultiplier = 1,
+                        CutOffGunshots = false,
+                        ExpRadius = 25,
+                        Mode = "Semi",
+                        BurstFireRate = 900,
+                        IncludeChamberedBullet = true,
+                        CanJam = false,
+                        ReloadType = 1,
+                        Pitches = {
+                            1,
+                            1.12
+                        },
+                        MaxRecoilPower = 1,
+                        BulletFlareColor = Color3.new(1, 0.40392157435417175, 0.32549020648002625),
+                        LimbsDamage = {
+                            30,
+                            45
+                        },
+                        JamChance = 1000,
+                        BulletPenetration = 60,
+                        CanCheckMag = false,
+                        BulletLight = false,
+                        TracerLightInfluence = 0,
+                        ServerBoltExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        TracerLifeTime = 0.05,
+                        MaxSway = 1,
+                        TracerLightEmission = 1,
+                        RecoilPunch = 0.2,
+                        BWMaxDistance = 200,
+                        RightPos = CFrame.new(-0.6000000238418579, -0.10000000149011612, -0.949999988079071, 1, -0, 0, 0, -4.371138828673793e-08, 1, 0, -1, -4.371138828673793e-08),
+                        BulletLightColor = Color3.new(1, 0.40392157435417175, 0.32549020648002625),
+                        FireModes = {
+                            Burst = false,
+                            Semi = true,
+                            Auto = true,
+                            Smoke = false,
+                            ChangeFiremode = true,
+                            Explosive = false
+                        },
+                        AutoChamber = false,
+                        BeltFed = false,
+                        AllowPenetration = true,
+                        ZoomAnim = false,
+                        RandomTracer = false,
+                        MinRecoilPower = -1,
+                        MagCount = true,
+                        TorsoDamage = {
+                            75,
+                            113
+                        },
+                        FocusOnSight2 = false,
+                        BulletLightBrightness = 1,
+                        OffsetSens = 0.1,
+                        RainbowMode = false,
+                        Name = "SA-58",
+                        Ammo = 20,
+                        AimRecoilReduction = 1.5,
+                        BulletLightRange = 40,
+                        CutOffDistance = true,
+                        OffsetAngle = 5,
+                        SlideLock = true,
+                        BSpeed = 5000,
+                        WalkMultiplier = 0.2,
+                        DestroyJointRadiusPercent = 0,
+                        LauncherDamage = 100,
+                        Bullets = 1,
+                        BWEmitter = 25,
+                        FireRate = 750,
+                        ExplosiveHit = false,
+                        UGL = false,
+                        SuppressTime = 1000000,
+                        Tracer = true,
+                        OldCamSway = true,
+                        BulletType = "7.62x51mm",
+                        LeftArmPos = CFrame.new(1.0499999523162842, 0.8999999761581421, -1.399999976158142, 0.8516507148742676, 0.3099755048751831, 0.4226182699203491, -0.33170679211616516, -0.30552393198013306, 0.8925389051437378, 0.4057852029800415, -0.9003167152404785, -0.15737870335578918),
+                        TracerWidth = 7,
+                        PenetrationDistance = 7,
+                        BDrop = 0.1,
+                        EnableHolster = false,
+                        SlideExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        TracerChance = 70,
+                        Distance = 20000,
+                        FallOfDamage = 1,
+                        TracerColor = Color3.new(1, 0.40392157435417175, 0.32549020648002625),
+                        HolsterTo = "Torso",
+                        ChangeFOV = {
+                            25,
+                            60
+                        },
+                        RightArmPos = CFrame.new(-0.8500000238418579, -0.20000000298023224, -1.2000000476837158, 1, -0, 0, 0, -4.371138828673793e-08, 1, 0, -1, -4.371138828673793e-08),
+                        MinSpread = 0,
+                        SpreadStepAmount = 1.5,
+                        ModoTreino = false,
+                        Thermal = false,
+                        HRecoil = {
+                            1,
+                            10
+                        },
+                        SuppressMaxDistance = 10,
+                        VRecoil = {
+                            35,
+                            70
+                        },
+                        AimRecover = 0.4,
+                        LauncherRadius = 25,
+                        GunType = 1,
+                        BurstShot = 3,
+                        LeftPos = CFrame.new(1.2000000476837158, 0.4000000059604645, -1.600000023841858, 0.7697511315345764, 0.28016647696495056, 0.5735764503479004, -0.29576510190963745, -0.6397386193275452, 0.7094064950942993, 0.5656908750534058, -0.7157102823257446, -0.40957608819007874),
+                        RecoilPowerStepAmount = 0.1,
+                        LauncherPressure = 500,
+                        ExPressure = 500,
+                        HeadDamage = {
+                            1,
+                            1
+                        },
+                        MaxSpread = 0.5,
+                        LauncherDestroyJointRadiusPercent = 0,
+                        FastReload = true,
+                        ChamberWhileAim = false,
+                        GunPos = CFrame.new(0.15000000596046448, -0.15000000596046448, 1, 1, 0, 0, 0, -4.371138828673793e-08, -1, 0, 1, -4.371138828673793e-08),
+                        TracerEveryXShots = 5,
+                        GunSize = 3.5,
+                        HPunchBase = 0.5,
+                        ServerSlideExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        LauncherReady = false,
+                        MoveBolt = false,
+                        ArcadeMode = false,
+                        PunchRecover = 0.1,
+                        BulletFlare = false,
+                        SwayBase = 0,
+                        HolsterPos = CFrame.new(0.25, -0.10000000149011612, -0.800000011920929, 0.6403416395187378, -0.7631294131278992, -0.08715573698282242, 0.7582467198371887, 0.6461606025695801, -0.08682408183813095, 0.12257461249828339, -0.010488472878932953, 0.9924039244651794),
+                        OldRecoil = true,
+                        GunFOVReduction = 3,
+                        BoltLock = false,
+                        DPunchBase = 1,
+                        ExplosionDamage = 100
+                    },
+                    [9] = "canYouBypassThis???\226\128\142"
+                }
+
+                -- Attempt to fire the server with the faked arguments
+                damageEvent:FireServer(unpack(args))
+            end
+        end
+    end
+end)
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
+
+local localPlayer = Players.LocalPlayer
+local damageEvent = ReplicatedStorage:WaitForChild("EngineShared"):WaitForChild("Events"):WaitForChild("damage")
+
+-- Function to create the tool
+local function createKillTool()
+    local tool = Instance.new("Tool")
+    tool.Name = "Damage - 150"
+    tool.ToolTip = "Click to damage"
+    tool.RequiresHandle = false -- Set to false so no physical handle is needed
+
+    return tool
+end
+
+local killTool = createKillTool()
+killTool.Parent = localPlayer.Backpack -- Give the tool to the player
+
+local mouse = localPlayer:GetMouse()
+local isToolEquipped = false
+
+-- Event for when the tool is equipped
+killTool.Equipped:Connect(function()
+    isToolEquipped = true
+    print("InvisibleKillerTool equipped!")
+end)
+
+-- Event for when the tool is unequipped
+killTool.Unequipped:Connect(function()
+    isToolEquipped = false
+    print("InvisibleKillerTool unequipped.")
+end)
+
+-- Event for when the player clicks
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 and not gameProcessedEvent and isToolEquipped then
+        print("Mouse clicked with invisible tool equipped!")
+
+        -- Perform a raycast from the mouse to find the hit target
+        local target = mouse.Target -- This is the actual part that was clicked
+        local targetHumanoid = nil
+        local targetPart = nil -- This will store the specific limb/part that was clicked
+
+        if target then
+            local character = target.Parent
+            -- Check if the clicked part's parent is a character and belongs to a player
+            if character and Players:GetPlayerFromCharacter(character) and character:FindFirstChildOfClass("Humanoid") then
+                targetHumanoid = character:FindFirstChildOfClass("Humanoid")
+                targetPart = target -- Assign the actual clicked part to targetPart
+            end
+        end
+
+        if targetHumanoid and targetPart and targetHumanoid.Health > 0 then
+            local playerToKill = Players:GetPlayerFromCharacter(targetHumanoid.Parent)
+            if playerToKill and playerToKill ~= localPlayer then -- Ensure it's another player
+                print("Attempting to kill: " .. playerToKill.Name .. " by hitting " .. targetPart.Name)
+
+                local args = {
+                    [1] = targetHumanoid,
+                    [2] = targetPart, -- Now dynamically the clicked part (Head, Arm, Leg, Torso, etc.)
+                    [3] = CFrame.new(targetPart.Position), -- Use the clicked part's position for CFrame
+                    [4] = targetPart.Position, -- Use the clicked part's position
+                    [5] = targetPart.Position, -- Use the clicked part's position
+                    [6] = 1.9375000000000004,
+                    [7] = {
+                        bulletLight = {
+                            enabled = true,
+                            brightness = 1,
+                            lightRange = 10,
+                            color = Color3.new(0, 1, 0)
+                        },
+                        lightBleedChance = 0000,
+                        penPower = 1000,
+                        width = 1,
+                        fragmentChance = 0,
+                        heavyBleedChance = 0000,
+                        tracer = {
+                            enabled = true,
+                            everyXShots = 2,
+                            lightInfluence = 0,
+                            lightEmission = 1,
+                            chance = 70,
+                            color = Color3.new(0, 1, 0),
+                            random = false,
+                            width = 3
+                        },
+                        speed = 840,
+                        armorDamage = 1003,
+                        ricochetChance = 0,
+                        damage = 150 -- Keep damage at 100 as it was working for killing
+                    },
+                    [8] = {
+                        VPunchBase = 1,
+                        BoltExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        BulletWhiz = true,
+                        FocusOnSight = false,
+                        Chambered = true,
+                        ServerGunPos = CFrame.new(-0.30000001192092896, -1, -0.30000001192092896, -4.371138828673793e-08, 0, -1, 1, -4.371138828673793e-08, -4.371138828673793e-08, -4.371138828673793e-08, -1, 1.910685465164705e-15),
+                        NewCameraMultiplier = 1,
+                        CutOffGunshots = false,
+                        ExpRadius = 25,
+                        Mode = "Semi",
+                        BurstFireRate = 900,
+                        IncludeChamberedBullet = true,
+                        CanJam = false,
+                        ReloadType = 1,
+                        Pitches = {
+                            1,
+                            1.12
+                        },
+                        MaxRecoilPower = 1,
+                        BulletFlareColor = Color3.new(1, 0.40392157435417175, 0.32549020648002625),
+                        LimbsDamage = {
+                            30,
+                            45
+                        },
+                        JamChance = 1000,
+                        BulletPenetration = 60,
+                        CanCheckMag = false,
+                        BulletLight = false,
+                        TracerLightInfluence = 0,
+                        ServerBoltExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        TracerLifeTime = 0.05,
+                        MaxSway = 1,
+                        TracerLightEmission = 1,
+                        RecoilPunch = 0.2,
+                        BWMaxDistance = 200,
+                        RightPos = CFrame.new(-0.6000000238418579, -0.10000000149011612, -0.949999988079071, 1, -0, 0, 0, -4.371138828673793e-08, 1, 0, -1, -4.371138828673793e-08),
+                        BulletLightColor = Color3.new(1, 0.40392157435417175, 0.32549020648002625),
+                        FireModes = {
+                            Burst = false,
+                            Semi = true,
+                            Auto = true,
+                            Smoke = false,
+                            ChangeFiremode = true,
+                            Explosive = false
+                        },
+                        AutoChamber = false,
+                        BeltFed = false,
+                        AllowPenetration = true,
+                        ZoomAnim = false,
+                        RandomTracer = false,
+                        MinRecoilPower = -1,
+                        MagCount = true,
+                        TorsoDamage = {
+                            75,
+                            113
+                        },
+                        FocusOnSight2 = false,
+                        BulletLightBrightness = 1,
+                        OffsetSens = 0.1,
+                        RainbowMode = false,
+                        Name = "SA-58",
+                        Ammo = 20,
+                        AimRecoilReduction = 1.5,
+                        BulletLightRange = 40,
+                        CutOffDistance = true,
+                        OffsetAngle = 5,
+                        SlideLock = true,
+                        BSpeed = 5000,
+                        WalkMultiplier = 0.2,
+                        DestroyJointRadiusPercent = 0,
+                        LauncherDamage = 100,
+                        Bullets = 1,
+                        BWEmitter = 25,
+                        FireRate = 750,
+                        ExplosiveHit = false,
+                        UGL = false,
+                        SuppressTime = 1000000,
+                        Tracer = true,
+                        OldCamSway = true,
+                        BulletType = "7.62x51mm",
+                        LeftArmPos = CFrame.new(1.0499999523162842, 0.8999999761581421, -1.399999976158142, 0.8516507148742676, 0.3099755048751831, 0.4226182699203491, -0.33170679211616516, -0.30552393198013306, 0.8925389051437378, 0.4057852029800415, -0.9003167152404785, -0.15737870335578918),
+                        TracerWidth = 7,
+                        PenetrationDistance = 7,
+                        BDrop = 0.1,
+                        EnableHolster = false,
+                        SlideExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        TracerChance = 70,
+                        Distance = 20000,
+                        FallOfDamage = 1,
+                        TracerColor = Color3.new(1, 0.40392157435417175, 0.32549020648002625),
+                        HolsterTo = "Torso",
+                        ChangeFOV = {
+                            25,
+                            60
+                        },
+                        RightArmPos = CFrame.new(-0.8500000238418579, -0.20000000298023224, -1.2000000476837158, 1, -0, 0, 0, -4.371138828673793e-08, 1, 0, -1, -4.371138828673793e-08),
+                        MinSpread = 0,
+                        SpreadStepAmount = 1.5,
+                        ModoTreino = false,
+                        Thermal = false,
+                        HRecoil = {
+                            1,
+                            10
+                        },
+                        SuppressMaxDistance = 10,
+                        VRecoil = {
+                            35,
+                            70
+                        },
+                        AimRecover = 0.4,
+                        LauncherRadius = 25,
+                        GunType = 1,
+                        BurstShot = 3,
+                        LeftPos = CFrame.new(1.2000000476837158, 0.4000000059604645, -1.600000023841858, 0.7697511315345764, 0.28016647696495056, 0.5735764503479004, -0.29576510190963745, -0.6397386193275452, 0.7094064950942993, 0.5656908750534058, -0.7157102823257446, -0.40957608819007874),
+                        RecoilPowerStepAmount = 0.1,
+                        LauncherPressure = 500,
+                        ExPressure = 500,
+                        HeadDamage = {
+                            1,
+                            1
+                        },
+                        MaxSpread = 0.5,
+                        LauncherDestroyJointRadiusPercent = 0,
+                        FastReload = true,
+                        ChamberWhileAim = false,
+                        GunPos = CFrame.new(0.15000000596046448, -0.15000000596046448, 1, 1, 0, 0, 0, -4.371138828673793e-08, -1, 0, 1, -4.371138828673793e-08),
+                        TracerEveryXShots = 5,
+                        GunSize = 3.5,
+                        HPunchBase = 0.5,
+                        ServerSlideExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        LauncherReady = false,
+                        MoveBolt = false,
+                        ArcadeMode = false,
+                        PunchRecover = 0.1,
+                        BulletFlare = false,
+                        SwayBase = 0,
+                        HolsterPos = CFrame.new(0.25, -0.10000000149011612, -0.800000011920929, 0.6403416395187378, -0.7631294131278992, -0.08715573698282242, 0.7582467198371887, 0.6461606025695801, -0.08682408183813095, 0.12257461249828339, -0.010488472878932953, 0.9924039244651794),
+                        OldRecoil = true,
+                        GunFOVReduction = 3,
+                        BoltLock = false,
+                        DPunchBase = 1,
+                        ExplosionDamage = 100
+                    },
+                    [9] = "canYouBypassThis???\226\128\142"
+                }
+
+                -- Attempt to fire the server with the faked arguments
+                damageEvent:FireServer(unpack(args))
+            end
+        end
+    end
+end)
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
+
+local localPlayer = Players.LocalPlayer
+local damageEvent = ReplicatedStorage:WaitForChild("EngineShared"):WaitForChild("Events"):WaitForChild("damage")
+
+-- Function to create the tool
+local function createKillTool()
+    local tool = Instance.new("Tool")
+    tool.Name = "Kill tool"
+    tool.ToolTip = "Click to kill a player"
+    tool.RequiresHandle = false -- Set to false so no physical handle is needed
+
+    return tool
+end
+
+local killTool = createKillTool()
+killTool.Parent = localPlayer.Backpack -- Give the tool to the player
+
+local mouse = localPlayer:GetMouse()
+local isToolEquipped = false
+
+-- Event for when the tool is equipped
+killTool.Equipped:Connect(function()
+    isToolEquipped = true
+    print("InvisibleKillerTool equipped!")
+end)
+
+-- Event for when the tool is unequipped
+killTool.Unequipped:Connect(function()
+    isToolEquipped = false
+    print("InvisibleKillerTool unequipped.")
+end)
+
+-- Event for when the player clicks
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 and not gameProcessedEvent and isToolEquipped then
+        print("Mouse clicked with invisible tool equipped!")
+
+        -- Perform a raycast from the mouse to find the hit target
+        local target = mouse.Target -- This is the actual part that was clicked
+        local targetHumanoid = nil
+        local targetPart = nil -- This will store the specific limb/part that was clicked
+
+        if target then
+            local character = target.Parent
+            -- Check if the clicked part's parent is a character and belongs to a player
+            if character and Players:GetPlayerFromCharacter(character) and character:FindFirstChildOfClass("Humanoid") then
+                targetHumanoid = character:FindFirstChildOfClass("Humanoid")
+                targetPart = target -- Assign the actual clicked part to targetPart
+            end
+        end
+
+        if targetHumanoid and targetPart and targetHumanoid.Health > 0 then
+            local playerToKill = Players:GetPlayerFromCharacter(targetHumanoid.Parent)
+            if playerToKill and playerToKill ~= localPlayer then -- Ensure it's another player
+                print("Attempting to kill: " .. playerToKill.Name .. " by hitting " .. targetPart.Name)
+
+                local args = {
+                    [1] = targetHumanoid,
+                    [2] = targetPart, -- Now dynamically the clicked part (Head, Arm, Leg, Torso, etc.)
+                    [3] = CFrame.new(targetPart.Position), -- Use the clicked part's position for CFrame
+                    [4] = targetPart.Position, -- Use the clicked part's position
+                    [5] = targetPart.Position, -- Use the clicked part's position
+                    [6] = 1.9375000000000004,
+                    [7] = {
+                        bulletLight = {
+                            enabled = true,
+                            brightness = 1,
+                            lightRange = 10,
+                            color = Color3.new(0, 1, 0)
+                        },
+                        lightBleedChance = 0000,
+                        penPower = 1000,
+                        width = 1,
+                        fragmentChance = 0,
+                        heavyBleedChance = 0000,
+                        tracer = {
+                            enabled = true,
+                            everyXShots = 2,
+                            lightInfluence = 0,
+                            lightEmission = 1,
+                            chance = 70,
+                            color = Color3.new(0, 1, 0),
+                            random = false,
+                            width = 3
+                        },
+                        speed = 840,
+                        armorDamage = 1003,
+                        ricochetChance = 0,
+                        damage = 153453454554353450 -- Keep damage at 100 as it was working for killing
+                    },
+                    [8] = {
+                        VPunchBase = 1,
+                        BoltExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        BulletWhiz = true,
+                        FocusOnSight = false,
+                        Chambered = true,
+                        ServerGunPos = CFrame.new(-0.30000001192092896, -1, -0.30000001192092896, -4.371138828673793e-08, 0, -1, 1, -4.371138828673793e-08, -4.371138828673793e-08, -4.371138828673793e-08, -1, 1.910685465164705e-15),
+                        NewCameraMultiplier = 1,
+                        CutOffGunshots = false,
+                        ExpRadius = 25,
+                        Mode = "Semi",
+                        BurstFireRate = 900,
+                        IncludeChamberedBullet = true,
+                        CanJam = false,
+                        ReloadType = 1,
+                        Pitches = {
+                            1,
+                            1.12
+                        },
+                        MaxRecoilPower = 1,
+                        BulletFlareColor = Color3.new(1, 0.40392157435417175, 0.32549020648002625),
+                        LimbsDamage = {
+                            30,
+                            45
+                        },
+                        JamChance = 1000,
+                        BulletPenetration = 60,
+                        CanCheckMag = false,
+                        BulletLight = false,
+                        TracerLightInfluence = 0,
+                        ServerBoltExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        TracerLifeTime = 0.05,
+                        MaxSway = 1,
+                        TracerLightEmission = 1,
+                        RecoilPunch = 0.2,
+                        BWMaxDistance = 200,
+                        RightPos = CFrame.new(-0.6000000238418579, -0.10000000149011612, -0.949999988079071, 1, -0, 0, 0, -4.371138828673793e-08, 1, 0, -1, -4.371138828673793e-08),
+                        BulletLightColor = Color3.new(1, 0.40392157435417175, 0.32549020648002625),
+                        FireModes = {
+                            Burst = false,
+                            Semi = true,
+                            Auto = true,
+                            Smoke = false,
+                            ChangeFiremode = true,
+                            Explosive = false
+                        },
+                        AutoChamber = false,
+                        BeltFed = false,
+                        AllowPenetration = true,
+                        ZoomAnim = false,
+                        RandomTracer = false,
+                        MinRecoilPower = -1,
+                        MagCount = true,
+                        TorsoDamage = {
+                            75,
+                            113
+                        },
+                        FocusOnSight2 = false,
+                        BulletLightBrightness = 1,
+                        OffsetSens = 0.1,
+                        RainbowMode = false,
+                        Name = "SA-58",
+                        Ammo = 20,
+                        AimRecoilReduction = 1.5,
+                        BulletLightRange = 40,
+                        CutOffDistance = true,
+                        OffsetAngle = 5,
+                        SlideLock = true,
+                        BSpeed = 5000,
+                        WalkMultiplier = 0.2,
+                        DestroyJointRadiusPercent = 0,
+                        LauncherDamage = 100,
+                        Bullets = 1,
+                        BWEmitter = 25,
+                        FireRate = 750,
+                        ExplosiveHit = false,
+                        UGL = false,
+                        SuppressTime = 1000000,
+                        Tracer = true,
+                        OldCamSway = true,
+                        BulletType = "7.62x51mm",
+                        LeftArmPos = CFrame.new(1.0499999523162842, 0.8999999761581421, -1.399999976158142, 0.8516507148742676, 0.3099755048751831, 0.4226182699203491, -0.33170679211616516, -0.30552393198013306, 0.8925389051437378, 0.4057852029800415, -0.9003167152404785, -0.15737870335578918),
+                        TracerWidth = 7,
+                        PenetrationDistance = 7,
+                        BDrop = 0.1,
+                        EnableHolster = false,
+                        SlideExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        TracerChance = 70,
+                        Distance = 20000,
+                        FallOfDamage = 1,
+                        TracerColor = Color3.new(1, 0.40392157435417175, 0.32549020648002625),
+                        HolsterTo = "Torso",
+                        ChangeFOV = {
+                            25,
+                            60
+                        },
+                        RightArmPos = CFrame.new(-0.8500000238418579, -0.20000000298023224, -1.2000000476837158, 1, -0, 0, 0, -4.371138828673793e-08, 1, 0, -1, -4.371138828673793e-08),
+                        MinSpread = 0,
+                        SpreadStepAmount = 1.5,
+                        ModoTreino = false,
+                        Thermal = false,
+                        HRecoil = {
+                            1,
+                            10
+                        },
+                        SuppressMaxDistance = 10,
+                        VRecoil = {
+                            35,
+                            70
+                        },
+                        AimRecover = 0.4,
+                        LauncherRadius = 25,
+                        GunType = 1,
+                        BurstShot = 3,
+                        LeftPos = CFrame.new(1.2000000476837158, 0.4000000059604645, -1.600000023841858, 0.7697511315345764, 0.28016647696495056, 0.5735764503479004, -0.29576510190963745, -0.6397386193275452, 0.7094064950942993, 0.5656908750534058, -0.7157102823257446, -0.40957608819007874),
+                        RecoilPowerStepAmount = 0.1,
+                        LauncherPressure = 500,
+                        ExPressure = 500,
+                        HeadDamage = {
+                            1,
+                            1
+                        },
+                        MaxSpread = 0.5,
+                        LauncherDestroyJointRadiusPercent = 0,
+                        FastReload = true,
+                        ChamberWhileAim = false,
+                        GunPos = CFrame.new(0.15000000596046448, -0.15000000596046448, 1, 1, 0, 0, 0, -4.371138828673793e-08, -1, 0, 1, -4.371138828673793e-08),
+                        TracerEveryXShots = 5,
+                        GunSize = 3.5,
+                        HPunchBase = 0.5,
+                        ServerSlideExtend = Vector3.new(0, 0, 0.4000000059604645),
+                        LauncherReady = false,
+                        MoveBolt = false,
+                        ArcadeMode = false,
+                        PunchRecover = 0.1,
+                        BulletFlare = false,
+                        SwayBase = 0,
+                        HolsterPos = CFrame.new(0.25, -0.10000000149011612, -0.800000011920929, 0.6403416395187378, -0.7631294131278992, -0.08715573698282242, 0.7582467198371887, 0.6461606025695801, -0.08682408183813095, 0.12257461249828339, -0.010488472878932953, 0.9924039244651794),
+                        OldRecoil = true,
+                        GunFOVReduction = 3,
+                        BoltLock = false,
+                        DPunchBase = 1,
+                        ExplosionDamage = 100
+                    },
+                    [9] = "canYouBypassThis???\226\128\142"
+                }
+
+                -- Attempt to fire the server with the faked arguments
+                damageEvent:FireServer(unpack(args))
+            end
+        end
+    end
+end)
